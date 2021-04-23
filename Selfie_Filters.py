@@ -87,3 +87,20 @@ def put_crown(crown, fc, x, y, w, h):
                 if crown[i][j][k] < 235:
                     fc[y + i - int (0.50 * face_height)][x + j][k] = crown[i][j][k]
     return fc
+
+
+def put_glass(glass, fc, x, y, w, h):
+    face_width = w
+    face_height = h
+
+    hat_width = face_width + 1
+    hat_height = int(0.50 * face_height) + 1
+
+    glass = cv2.resize(glass, (hat_width, hat_height))
+
+    for i in range(hat_height):
+        for j in range(hat_width):
+            for k in range(3):
+                if glass[i][j][k] < 235:
+                    fc[y + i - int(-0.20 * face_height)][x + j][k] = glass[i][j][k]
+    return fc
