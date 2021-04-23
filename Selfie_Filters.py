@@ -38,3 +38,52 @@ def put_dog_filter(dog, fc, x, y, w, h):
                 if dog[i][j][k] < 235:
                     fc[y + i - int(0.375 * h) - 1][x + j - int(0.35 * w)][k] = dog[i][j][k]
     return fc
+
+def put_hat(hat, fc, x, y, w, h):
+    face_width = w
+    face_height = h
+
+    hat_width = face_width + 1
+    hat_height = int (0.50 * face_height) + 1
+
+    hat = cv2.resize(hat, (hat_width, hat_height))
+
+    for i in range (hat_height):
+        for j in range (hat_width):
+            for k in range (3):
+                if hat[i][j][k] < 235:
+                    fc[y + i - int (0.40 * face_height)][x + j][k] = hat[i][j][k]
+    return fc
+
+def put_mask(mask, fc, x, y, w, h):
+    face_width = w
+    face_height = h
+
+    ears_width =  face_width + 10
+    ears_height = int(0.7 * face_height) + 1
+
+    mask = cv2.resize(mask, (ears_width, ears_height))
+
+    for i in range(ears_height):
+        for j in range(ears_width):
+            for k in range(3):
+                if mask[i][j][k] < 235:
+                    fc[y + i - int(-0.40 * face_height)][x + j][k] = mask[i][j][k]
+    return fc
+
+
+def put_crown(crown, fc, x, y, w, h):
+    face_width = w
+    face_height = h
+
+    crown_width = face_width + 10
+    crown_height = int (0.75 * face_height) + 10
+
+    crown = cv2.resize(crown, (crown_width, crown_height))
+
+    for i in range (crown_height):
+        for j in range (crown_width):
+            for k in range (3):
+                if crown[i][j][k] < 235:
+                    fc[y + i - int (0.50 * face_height)][x + j][k] = crown[i][j][k]
+    return fc
