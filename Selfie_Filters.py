@@ -87,3 +87,73 @@ def put_crown(crown, fc, x, y, w, h):
                 if crown[i][j][k] < 235:
                     fc[y + i - int (0.50 * face_height)][x + j][k] = crown[i][j][k]
     return fc
+def put_ears(ears, fc, x, y, w, h):
+    face_width = w
+    face_height = h
+
+    ears_width = face_width + 1
+    ears_height = int (1 * face_height) + 1
+
+    ears = cv2.resize(ears, (ears_width, ears_height))
+
+    for i in range (ears_height):
+        for j in range (ears_width):
+            for k in range (3):
+                if ears[i][j][k] < 233:
+                    fc[y + i - int (0.55 * face_height)][x + j][k] = ears[i][j][k]
+    return fc
+
+
+global choise
+choice = 0
+print ('Enter your choice filter to launch :')
+print('1 = hat & glasses\n'
+      '2 = Butterflies\n'
+      '3 = ears and mask\n'
+      '4 = dog\n'
+      '5 = crown')
+choise = int (input ('enter your choice:'))
+webcam = cv2.VideoCapture (0)
+out = cv2.VideoWriter(filename, get_video_type(filename),25,(640,480))
+img_counter = 0
+
+while True:
+    size = 4
+    ret, im = webcam.read ()
+    im = cv2.flip (im, 1, 0)
+    gray = cv2.cvtColor (im, cv2.COLOR_BGR2GRAY)
+    fl = face.detectMultiScale(gray, 1.20, 8)
+
+
+    for (x, y, w, h) in fl:
+        if choise == 1:
+            im = put_hat(hat, im, x, y, w, h)
+            im = put_glass(glass, im, x, y, w, h)
+
+        elif choise == 2:
+            im = put_butterflies(butterflies, im, x, y, w, h)
+        elif choise == 3:
+            im = put_ears(ears, im, x, y, w, h)
+            im = put_mask(mask, im, x, y, w, h)
+        elif choise == 4:
+            im = put_dog_filter(dog, im, x, y, w, h)
+
+        else:
+            im = put_crown(crown, im, x, y, w, h)
+
+    out.write(im)
+    cv2.imshow('OUTPUT', im)
+    key = cv2.waitKey(1) & 0xff
+    if key == 27:  # The Esc key
+        break
+    if key % 256 == 32:
+        # SPACE pressed
+        img_name = "opencv_frame_{}.png".format(img_counter)
+        cv2.imwrite(img_name, im)
+        print("{} written!".format(img_name))
+        img_counter += 1
+
+
+webcam.release()
+out.release()
+cv2.destroyAllWindows()
