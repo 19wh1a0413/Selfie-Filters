@@ -35,3 +35,39 @@ def prepare_data(df):
     y = y.astype(np.float32)
 
     return X,y
+
+
+def plot_data(img, face_points):
+    '''
+    Plot image and facial keypoints
+    Parameters:
+    --------------------
+    img: Image column value
+    face_point: Target column value
+    '''
+
+    fig = plt.figure (figsize=(30, 30))
+    ax = fig.add_subplot (121)
+    # Plot the image
+    ax.imshow (np.squeeze (img), cmap='gray')
+    face_points = face_points * 48 + 48
+    # Plot the keypoints
+    ax.scatter (face_points[0::2], face_points[1::2], marker='o', c='c', s=10)
+    plt.show ()
+
+# Load training data
+df = pd.read_csv('training.csv')
+df=df.head(10)
+X_train, y_train =prepare_data(df)
+
+# Plot image and facial points for train dataset
+plot_data(X_train[3], y_train[3])
+
+
+# Create the model architecture
+my_model = create_model()
+# Compile the model with an appropriate optimizer and loss and metrics
+compile_model(my_model, optimizer = 'adam', loss = 'mean_squared_error', metrics = ['accuracy'])
+
+# Save the model
+save_model(my_model, 'models/mm')
