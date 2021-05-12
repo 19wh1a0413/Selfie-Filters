@@ -1,0 +1,8 @@
+OpenCV : 
+https://www.youtube.com/watch?v=WQeoO7MI0Bs
+
+Convolutional Neural Network (CNN) :
+https://www.tensorflow.org/tutorials/images/cnn/
+
+Image and Video capture using Opencv : 
+https://www.goeduhub.com/10272/how-to-take-picture-from-live-web-cam-using-opencv-video-part/
