@@ -114,3 +114,27 @@ while True:
     
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     faces_keypoints = []
+
+for (x, y, w, h) in faces:
+
+        
+        face = gray[y:y + h, x:x + w]
+
+        
+        scaled_face = cv2.resize (face, (96, 96), 0, 0, interpolation=cv2.INTER_AREA)
+
+       
+        input_image = scaled_face / 255
+
+     
+        input_image = np.expand_dims (input_image, axis=0)
+        input_image = np.expand_dims (input_image, axis=-1)
+
+        
+        face_points = model.predict (input_image)[0]
+
+        
+        face_points[0::2] = face_points[0::2] * w / 2 + w / 2 + x
+        face_points[1::2] = face_points[1::2] * h / 2 + h / 2 + y
+        faces_keypoints.append (face_points)
+    
