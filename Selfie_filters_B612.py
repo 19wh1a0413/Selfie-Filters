@@ -65,19 +65,15 @@ def apply_filters(face_points, image_copy_1, image_name):
         width = sg.shape[1]
         height = sg.shape[0]
 
-        # x coordinate = average x coordinate of eyes - width/2
-        # y coordinate = average y coordinate of eyes - height/2
         x1 = int ((face_points[i][2] + 5 + face_points[i][0] + 5) / 2 - width / 2)
         x2 = x1 + width
 
         y1 = int ((face_points[i][2] - 65 + face_points[i][1] - 65) / 2 - height / 2)
         y2 = y1 + height
 
-        # Create an alpha mask based on the transparency values
         alpha_fil = np.expand_dims (sg[:, :, 3] / 255.0, axis=-1)
         alpha_face =1.0 - alpha_fil
 
-        # Take a weighted sum of the image and the animal filter using the alpha values and (1- alpha)
         image_copy_1[y1:y2, x1:x2] = (alpha_fil * sg[:, :, :3] + alpha_face * image_copy_1[y1:y2, x1:x2])
 
     return image_copy_1
@@ -138,3 +134,56 @@ for (x, y, w, h) in faces:
         face_points[1::2] = face_points[1::2] * h / 2 + h / 2 + y
         faces_keypoints.append (face_points)
     
+# Plot facial keypoints on image
+        for point in range (15):
+            cv2.circle (image_copy, (face_points[2 * point], face_points[2 * point + 1]), 2, (255, 255, 0), -1)
+
+        for (x, y, w, h) in faces:
+            if choice == 1:
+                s = apply_filters (faces_keypoints, image_copy_1, "s.png")
+                out.write (image_copy_1)
+                # Screen with the filter
+                cv2.imshow ('Screen with filter', s)
+
+            elif choice == 2 :
+                dog = apply_filters(faces_keypoints, image_copy_1, "dog.png")
+                out.write(image_copy_1)
+                # Screen with the filter
+                cv2.imshow('Screen with filter', dog)
+#
+            elif choice == 3 :
+                pig = apply_filters(faces_keypoints, image_copy_1, "pig.png")
+                out.write(image_copy_1)
+                # Screen with the filter
+                cv2.imshow('Screen with filter', pig)
+            elif choice == 4:
+                fluffy = apply_filters(faces_keypoints, image_copy_1, "fluffy.png")
+                out.write(image_copy_1)
+                # Screen with the filter
+                cv2.imshow('Screen with filter', fluffy)
+            elif choice == 5:
+                mask = apply_filters (faces_keypoints, image_copy_1, "mask.png")
+                out.write (image_copy_1)
+                # Screen with the filter
+                cv2.imshow ('Screen with filter', mask)
+            else:
+                bear = apply_filters (faces_keypoints, image_copy_1, "bear.png")
+                out.write (image_copy_1)
+                # Screen with the filter
+                cv2.imshow ('Screen with filter', bear)
+
+        # Screen with facial keypoints
+        cv2.imshow ('Screen with facial Keypoints predicted', image_copy)
+    key = cv2.waitKey(1) & 0xff
+    if key == 27:  # The Esc key
+        break
+    if key % 256 == 32:
+        # SPACE to capture
+        img_name = "opencv_frame_{}.png".format(img_counter)
+        cv2.imwrite(img_name, image_copy_1)
+        print("{} saved!!!".format(img_name))
+        img_counter += 1
+
+camera.release()
+out.release()
+cv2.destroyAllWindows()    
