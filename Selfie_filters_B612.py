@@ -81,3 +81,36 @@ def apply_filters(face_points, image_copy_1, image_name):
         image_copy_1[y1:y2, x1:x2] = (alpha_fil * sg[:, :, :3] + alpha_face * image_copy_1[y1:y2, x1:x2])
 
     return image_copy_1
+
+model = load_model('models/mm.h5')
+
+
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+#choice to launch filter
+global choice
+print ('Enter your choice filter to launch :')
+print('1 = Rabbit\n'
+      '2 = Dog\n'
+      '3 = Pig\n'
+      '4 = Fluffy\n'
+      '5 = Mask\n'
+      '6 = Bear\n')
+choice = int (input ('enter your choice:'))
+
+camera = cv2.VideoCapture(0)
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('video.mp4', fourcc,25.0,(640,480))
+img_counter = 0
+while True:
+    
+    ret, image = camera.read ()
+    image_copy = np.copy (image)
+    image_copy_1 = np.copy (image)
+    image_copy_2 = np.copy (image)
+
+    
+    gray = cv2.cvtColor (image, cv2.COLOR_BGR2GRAY)
+    
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    faces_keypoints = []
