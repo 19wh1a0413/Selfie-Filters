@@ -67,3 +67,29 @@ def plot_keypoints(img, keypoints):
     keypoints = keypoints * 48 + 48
     ax.scatter(keypoints[0::2], keypoints[1::2], marker = '*', s = 35)
     plt.show()
+
+
+    
+def apply_facial_filters(face_keypoints, filter_image, filter_image_name):
+    animal_filter = cv2.imread("images/" + filter_image_name, cv2.IMREAD_UNCHANGED)
+
+    for i in range(len(face_keypoints)):
+        filter_width = 6 * (face_keypoints[i][14] + 15 - face_keypoints[i][18] + 15)
+        scale_factor = filter_width / animal_filter.shape[1]
+        resized_filter_image = cv2.resize(animal_filter, None, fx = scale_factor, fy = scale_factor, interpolation = cv2.INTER_AREA)
+
+        width = resized_filter_image.shape[1]
+        height = resized_filter_image.shape[0]
+
+        x1 = int((face_keypoints[i][2] + 5 + face_keypoints[i][0] + 5) / 2 - width / 2)
+        x2 = x1 + width
+
+        y1 = int((face_keypoints[i][3] - 65 + face_keypoints[i][1] - 65) / 2 - height / 2)
+        y2 = y1 + height
+
+        alpha_fil = np.expand_dims(resized_filter_image[:, :, 3] / 255.0, axis = -1)
+        alpha_face = 1.0 - alpha_fil
+
+        filter_image[y1 : y2, x1 : x2] = (alpha_fil * resized_filter_image[:, :, :3] + alpha_face * filter_image[y1 : y2, x1 : x2])
+
+    return filter_image
