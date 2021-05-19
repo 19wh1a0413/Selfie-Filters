@@ -155,3 +155,39 @@ def choice_filter():
                     panda = apply_facial_filters(facial_keypoints, filter_image, "panda.png")
                     out.write(filter_image)
                     cv2.imshow('Screen with filter', panda)
+                 key = cv2.waitKey(1) & 0xff
+        if key == 27:
+            break
+        if key % 256 == 32:
+            img_name = "Selfie_Filter_{}.png".format(img_counter)
+            cv2.imwrite(img_name, filter_image)
+            print("{} saved!!!".format(img_name))
+            img_counter += 1
+
+    camera.release()
+    out.release()
+    cv2.destroyAllWindows()
+
+# CODE STARTS HERE
+df = pd.read_csv('training.csv')
+df = df.head(10)
+
+X_train, y_train = train_test_split(df)
+
+plot_keypoints(X_train[5], y_train[5])
+
+my_model = create_cnn_model()
+
+compile_cnn_model(my_model, optimizer = 'adam', loss = 'mean_squared_error', metrics = ['accuracy'])
+
+save_cnn_model(my_model, 'models/mm')
+
+model = load_cnn_model('models/mm.h5')
+
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+n = int(input("How many Filters do you want to try ( in range(1-10 ) :-\t"))
+
+for _ in range(n):
+    choose = choice_filter()
+print("THANKS FOR TRYING !!")   
