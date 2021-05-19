@@ -93,3 +93,65 @@ def apply_facial_filters(face_keypoints, filter_image, filter_image_name):
         filter_image[y1 : y2, x1 : x2] = (alpha_fil * resized_filter_image[:, :, :3] + alpha_face * filter_image[y1 : y2, x1 : x2])
 
     return filter_image
+
+def choice_filter():
+    global choice
+    print('Choose your favourite filter to launch : \t')
+    print(' 1 = Rabbit \n 2 = Dog \n 3 = Pig \n 4 = Fluffy \n 5 = Bear \n 6 = Panda \n')
+    choice = int(input('enter your choice:\t'))
+    frames_per_second = 25.0
+    camera = cv2.VideoCapture(0)
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    out = cv2.VideoWriter('video.mp4v', fourcc, 25.0, (640, 480))
+    img_counter = 0
+
+    while True:
+        ret, image = camera.read()
+        image_copy = np.copy(image)
+        filter_image = np.copy(image)
+        image_copy_2 = np.copy(image)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        detect_faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        facial_keypoints = []
+
+        for (x, y, w, h) in detect_faces:
+            face = gray[y:y + h, x:x + w]
+            scaled_face = cv2.resize(face, (96, 96), 0, 0, interpolation = cv2.INTER_AREA)
+            input_image = scaled_face / 255
+
+            input_image = np.expand_dims(input_image, axis = 0)
+            input_image = np.expand_dims(input_image, axis = -1)
+
+            face_keypoints = model.predict(input_image)[0]
+            face_keypoints[0::2] = face_keypoints[0::2] * w / 2 + w / 2 + x
+            face_keypoints[1::2] = face_keypoints[1::2] * h / 2 + h / 2 + y
+
+            facial_keypoints.append(face_keypoints)
+            for point in range(15):
+                cv2.circle(image_copy, (face_keypoints[2 * point], face_keypoints[2 * point + 1]), 4, (255, 255, 0), -1)
+
+            for (x, y, w, h) in detect_faces:
+                if choice == 1:
+                    s = apply_facial_filters(facial_keypoints, filter_image, "s.png")
+                    out.write(filter_image)
+                    cv2.imshow('Screen with filter', s)
+                elif choice == 2:
+                    dog = apply_facial_filters(facial_keypoints, filter_image, "dog.png")
+                    out.write(filter_image)
+                    cv2.imshow('Screen with filter', dog)
+                elif choice == 3:
+                    pig = apply_facial_filters(facial_keypoints, filter_image, "pig.png")
+                    out.write(filter_image)
+                    cv2.imshow('Screen with filter', pig)
+                elif choice == 4:
+                    fluffy = apply_facial_filters(facial_keypoints, filter_image, "fluffy.png")
+                    out.write(filter_image)
+                    cv2.imshow('Screen with filter', fluffy)
+                elif choice == 5:
+                    bear = apply_facial_filters(facial_keypoints, filter_image, "bear.png")
+                    out.write(filter_image)
+                    cv2.imshow('Screen with filter', bear)
+                else:
+                    panda = apply_facial_filters(facial_keypoints, filter_image, "panda.png")
+                    out.write(filter_image)
+                    cv2.imshow('Screen with filter', panda)
