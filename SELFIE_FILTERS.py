@@ -59,3 +59,11 @@ def train_test_split(df):
     X, y = shuffle(X, y, random_state = 40)
     y = y.astype(np.float32)
     return X, y
+
+def plot_keypoints(img, keypoints):
+    fig = plt.figure(figsize = (45, 45))
+    ax = fig.add_subplot(121)
+    ax.imshow(np.squeeze(img), cmap = 'gray')
+    keypoints = keypoints * 48 + 48
+    ax.scatter(keypoints[0::2], keypoints[1::2], marker = '*', s = 35)
+    plt.show()
