@@ -14,3 +14,4 @@ Start
 stop
 
 **Output**
+![alt text](C:\Users\Admin\PycharmProjects\ml_project\images\bear.png "Title Text")
