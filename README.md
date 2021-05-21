@@ -13,5 +13,3 @@ Start
 5)Adjust and Plot facial keypoints on image and adjust filter.
 stop
 
-**Output**
-![alt text](C:\Users\Admin\PycharmProjects\ml_project\images\bear.png "Title Text")
