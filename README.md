@@ -1,7 +1,7 @@
 **Problem Statment**
 
 Selfie Filters
-To build a Basic desktop application to play around with B612-alike filters like hat, moustache and glasses automatic in-face superposition in real time.
+To build a model to play around with B612-alike filters like hat, moustache and glasses automatic in-face superposition in real time.
 
 **Approach**
 
